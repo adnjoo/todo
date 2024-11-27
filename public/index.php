@@ -34,6 +34,10 @@ $tasks = getTasks($pdo);
 
 <body>
     <div class="container">
+        <!-- Display the logged-in user's name -->
+        <p>Welcome, <?= htmlspecialchars($_SESSION['username']); ?>!</p>
+        <a href="logout.php">Logout</a>
+
         <h1>To-Do List</h1>
         <form method="POST">
             <input type="text" name="task" placeholder="Enter a new task" required>
