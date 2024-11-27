@@ -14,7 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
-            echo "Login successful!";
+            // echo "Login successful!";
+            header("Location: index.php");
         } else {
             echo "Invalid username or password.";
         }
@@ -41,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <br>
         <button type="submit">Login</button>
     </form>
+    <a href="register.php">Register</a>
 </body>
 
 </html>

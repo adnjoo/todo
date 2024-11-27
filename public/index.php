@@ -5,21 +5,21 @@ include_once '../src/functions.php';
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit();
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['task'])) {
-        addTask($pdo, $_POST['task']);
-    } elseif (isset($_POST['complete'])) {
-        completeTask($pdo, $_POST['complete']);
-    } elseif (isset($_POST['delete'])) {
-        deleteTask($pdo, $_POST['delete']);
+    $isLoggedIn = false; // Flag for user login status
+} else {
+    $isLoggedIn = true; // Flag for user login status
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST['task'])) {
+            addTask($pdo, $_POST['task']);
+        } elseif (isset($_POST['complete'])) {
+            completeTask($pdo, $_POST['complete']);
+        } elseif (isset($_POST['delete'])) {
+            deleteTask($pdo, $_POST['delete']);
+        }
     }
 }
 
-$tasks = getTasks($pdo);
+$tasks = $isLoggedIn ? getTasks($pdo) : [];
 ?>
 
 <!DOCTYPE html>
@@ -34,33 +34,40 @@ $tasks = getTasks($pdo);
 
 <body>
     <div class="container">
-        <!-- Display the logged-in user's name -->
-        <p>Welcome, <?= htmlspecialchars($_SESSION['username']); ?>!</p>
-        <a href="logout.php">Logout</a>
+        <?php if ($isLoggedIn): ?>
+            <!-- Display the logged-in user's name -->
+            <p>Welcome, <?= htmlspecialchars($_SESSION['username']); ?>!</p>
+            <a href="logout.php">Logout</a>
 
-        <h1>To-Do List</h1>
-        <form method="POST">
-            <input type="text" name="task" placeholder="Enter a new task" required>
-            <button type="submit">Add Task</button>
-        </form>
+            <h1>To-Do List</h1>
+            <form method="POST">
+                <input type="text" name="task" placeholder="Enter a new task" required>
+                <button type="submit">Add Task</button>
+            </form>
 
-        <ul>
-            <?php foreach ($tasks as $task): ?>
-                <li>
-                    <span class="<?= $task['status'] ? 'completed' : '' ?>">
-                        <?= htmlspecialchars($task['task']) ?>
-                    </span>
-                    <?php if (!$task['status']): ?>
+            <ul>
+                <?php foreach ($tasks as $task): ?>
+                    <li>
+                        <span class="<?= $task['status'] ? 'completed' : '' ?>">
+                            <?= htmlspecialchars($task['task']) ?>
+                        </span>
+                        <?php if (!$task['status']): ?>
+                            <form method="POST" style="display:inline;">
+                                <button name="complete" value="<?= $task['id'] ?>">✔️</button>
+                            </form>
+                        <?php endif; ?>
                         <form method="POST" style="display:inline;">
-                            <button name="complete" value="<?= $task['id'] ?>">✔️</button>
+                            <button name="delete" value="<?= $task['id'] ?>">🗑️</button>
                         </form>
-                    <?php endif; ?>
-                    <form method="POST" style="display:inline;">
-                        <button name="delete" value="<?= $task['id'] ?>">🗑️</button>
-                    </form>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <!-- Show message for users not logged in -->
+            <h1>Welcome to the To-Do List App</h1>
+            <p>You need to log in to manage your tasks.</p>
+            <a href="login.php">Click here to log in</a>
+        <?php endif; ?>
     </div>
 </body>
 
