@@ -24,55 +24,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<?php
+$title = 'Login'; // Dynamic title for the header
+include_once '../src/views/header.php';
+?>
+<div class="flex justify-center items-center min-h-screen bg-gray-100">
+    <div class="w-full max-w-md bg-white rounded shadow-lg p-6">
+        <h3 class="text-2xl font-bold text-center text-gray-700 mb-4">Login</h3>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-
-<body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header text-center bg-primary text-white">
-                        <h3>Login</h3>
-                    </div>
-                    <div class="card-body">
-                        <!-- Display error message if login fails -->
-                        <?php if (!empty($error)): ?>
-                            <div class="alert alert-danger" role="alert">
-                                <?= htmlspecialchars($error) ?>
-                            </div>
-                        <?php endif; ?>
-
-                        <!-- Login Form -->
-                        <form method="POST">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" name="username" class="form-control" id="username" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" name="password" class="form-control" id="password" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100">Login</button>
-                        </form>
-                    </div>
-                    <div class="card-footer text-center">
-                        <p>Don't have an account? <a href="register.php">Register here</a></p>
-                    </div>
-                </div>
+        <!-- Display error message if login fails -->
+        <?php if (!empty($error)): ?>
+            <div class="mb-4 p-4 text-red-700 bg-red-100 rounded">
+                <?= htmlspecialchars($error) ?>
             </div>
+        <?php endif; ?>
+
+        <!-- Login Form -->
+        <form method="POST" class="space-y-4">
+            <div>
+                <label for="username" class="block text-gray-700 font-medium">Username</label>
+                <input
+                    type="text"
+                    name="username"
+                    id="username"
+                    class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required>
+            </div>
+            <div>
+                <label for="password" class="block text-gray-700 font-medium">Password</label>
+                <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required>
+            </div>
+            <button
+                type="submit"
+                class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                Login
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <p class="text-gray-600">
+                Don't have an account?
+                <a href="register.php" class="text-blue-500 hover:underline">Register here</a>
+            </p>
         </div>
     </div>
+</div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+<?php include_once '../src/views/footer.php'; ?>
