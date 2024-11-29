@@ -22,53 +22,61 @@ if (!isset($_SESSION['user_id'])) {
 $tasks = $isLoggedIn ? getTasks($pdo) : [];
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<?php
+$title = 'To-Do List'; // Dynamic title for the header
+include_once '../src/views/header.php';
+?>
+<div class="container mt-5">
+    <?php if ($isLoggedIn): ?>
+        <!-- Display the logged-in user's name -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Welcome, <?= htmlspecialchars($_SESSION['username']); ?>!</h1>
+            <a href="logout.php" class="btn btn-danger">Logout</a>
+        </div>
 
-<body>
-    <div class="container">
-        <?php if ($isLoggedIn): ?>
-            <!-- Display the logged-in user's name -->
-            <p>Welcome, <?= htmlspecialchars($_SESSION['username']); ?>!</p>
-            <a href="logout.php">Logout</a>
+        <h2 class="mb-4">To-Do List</h2>
 
-            <h1>To-Do List</h1>
-            <form method="POST">
-                <input type="text" name="task" placeholder="Enter a new task" required>
-                <button type="submit">Add Task</button>
-            </form>
+        <!-- Task form -->
+        <form method="POST" class="mb-3">
+            <div class="input-group">
+                <input type="text" name="task" class="form-control" placeholder="Enter a new task" required>
+                <button type="submit" class="btn btn-primary">Add Task</button>
+            </div>
+        </form>
 
-            <ul>
-                <?php foreach ($tasks as $task): ?>
-                    <li>
-                        <span class="<?= $task['status'] ? 'completed' : '' ?>">
-                            <?= htmlspecialchars($task['task']) ?>
-                        </span>
+        <!-- Task list -->
+        <ul class="list-group">
+            <?php foreach ($tasks as $task): ?>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="<?= $task['status'] ? 'text-decoration-line-through text-muted' : '' ?>">
+                        <?= htmlspecialchars($task['task']) ?>
+                    </span>
+                    <div>
                         <?php if (!$task['status']): ?>
                             <form method="POST" style="display:inline;">
-                                <button name="complete" value="<?= $task['id'] ?>">✔️</button>
+                                <button name="complete" value="<?= $task['id'] ?>" class="btn btn-success btn-sm">✔️ Complete</button>
                             </form>
                         <?php endif; ?>
                         <form method="POST" style="display:inline;">
-                            <button name="delete" value="<?= $task['id'] ?>">🗑️</button>
+                            <button name="delete" value="<?= $task['id'] ?>" class="btn btn-danger btn-sm">🗑️ Delete</button>
                         </form>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php else: ?>
-            <!-- Show message for users not logged in -->
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php else: ?>
+        <!-- Show message for users not logged in -->
+        <div class="text-center">
             <h1>Welcome to the To-Do List App</h1>
-            <p>You need to log in to manage your tasks.</p>
-            <a href="login.php">Click here to log in</a>
-        <?php endif; ?>
-    </div>
+            <p class="lead">You need to log in to manage your tasks.</p>
+            <a href="login.php" class="btn btn-primary">Click here to log in</a>
+        </div>
+    <?php endif; ?>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
