@@ -13,6 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         addTask($pdo, $_POST['task'], $userId);
     } elseif (isset($_POST['complete'])) {
         completeTask($pdo, $_POST['complete'], $userId);
+    } elseif (isset($_POST['delete'])) {
+        deleteTask($pdo, $_POST['delete'], $userId);
     } elseif (isset($_POST['archive'])) {
         archiveTask($pdo, $_POST['archive'], $userId);
     }

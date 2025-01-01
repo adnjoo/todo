@@ -8,28 +8,66 @@ function renderTaskList($tasks)
                 <span class="<?= $task['status'] ? 'line-through text-gray-400' : 'text-gray-700' ?>">
                     <?= htmlspecialchars($task['task']) ?>
                 </span>
-                <div class="flex space-x-2">
-                    <?php if (!$task['status']): ?>
-                        <form method="POST">
+                <div class="relative">
+                    <!-- Triple Dot Button -->
+                    <button
+                        onclick="toggleDropdown('dropdown-<?= $task['id'] ?>')"
+                        class="bg-gray-200 hover:bg-gray-300 rounded-full p-2">
+                        ⋮
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div
+                        id="dropdown-<?= $task['id'] ?>"
+                        class="hidden absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-10">
+                        <?php if (!$task['status']): ?>
+                            <form method="POST" class="block w-full text-left">
+                                <button
+                                    name="complete"
+                                    value="<?= $task['id'] ?>"
+                                    class="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    ✔️ Mark as Complete
+                                </button>
+                            </form>
+                        <?php endif; ?>
+                        <form method="POST" class="block w-full text-left">
                             <button
-                                name="complete"
+                                name="delete"
                                 value="<?= $task['id'] ?>"
-                                class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">
-                                ✔️ Complete
+                                class="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                🗑️ Delete
                             </button>
                         </form>
-                    <?php endif; ?>
-                    <form method="POST">
-                        <button
-                            name="archive"
-                            value="<?= $task['id'] ?>"
-                            class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
-                            📂 Archive
-                        </button>
-                    </form>
+                        <form method="POST" class="block w-full text-left">
+                            <button
+                                name="archive"
+                                value="<?= $task['id'] ?>"
+                                class="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                📂 Archive
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </li>
         <?php endforeach; ?>
     </ul>
+
+    <!-- Dropdown Toggle Script -->
+    <script>
+        function toggleDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Close dropdowns if clicking outside
+        document.addEventListener('click', (event) => {
+            const dropdowns = document.querySelectorAll('[id^="dropdown-"]');
+            dropdowns.forEach((dropdown) => {
+                if (!dropdown.contains(event.target) && !dropdown.previousElementSibling.contains(event.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        });
+    </script>
     <?php
 }
