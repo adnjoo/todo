@@ -13,8 +13,8 @@ if (!isset($_SESSION['user_id'])) {
             addTask($pdo, $_POST['task']);
         } elseif (isset($_POST['complete'])) {
             completeTask($pdo, $_POST['complete']);
-        } elseif (isset($_POST['delete'])) {
-            deleteTask($pdo, $_POST['delete']);
+        } elseif (isset($_POST['archive'])) {
+            archiveTask($pdo, $_POST['archive']);
         }
     }
 }
@@ -74,10 +74,10 @@ include_once '../src/views/header.php';
                         <?php endif; ?>
                         <form method="POST">
                             <button
-                                name="delete"
+                                name="archive"
                                 value="<?= $task['id'] ?>"
-                                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
-                                🗑️ Delete
+                                class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
+                                📂 Archive
                             </button>
                         </form>
                     </div>
