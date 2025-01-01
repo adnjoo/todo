@@ -6,31 +6,40 @@ $config = [
 ];
 
 // Fetch tasks
-function getTasks($pdo, $includeArchived = false) {
-    $query = "SELECT * FROM tasks WHERE archived = 0 ORDER BY created_at DESC";
+function getTasks($pdo, $userId, $includeArchived = false) {
+    $query = "SELECT * FROM tasks WHERE user_id = :user_id AND archived = 0 ORDER BY created_at DESC";
     if ($includeArchived) {
-        $query = "SELECT * FROM tasks ORDER BY created_at DESC";
+        $query = "SELECT * FROM tasks WHERE user_id = :user_id ORDER BY created_at DESC";
     }
     $stmt = $pdo->prepare($query);
-    $stmt->execute();
+    $stmt->execute(['user_id' => $userId]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // Add a task
-function addTask($pdo, $task) {
-    $stmt = $pdo->prepare("INSERT INTO tasks (task) VALUES (:task)");
-    $stmt->execute(['task' => $task]);
+function addTask($pdo, $task, $userId) {
+    $stmt = $pdo->prepare("INSERT INTO tasks (task, user_id) VALUES (:task, :user_id)");
+    $stmt->execute([
+        'task' => $task,
+        'user_id' => $userId,
+    ]);
 }
 
 // Mark task as complete
-function completeTask($pdo, $taskId) {
-    $stmt = $pdo->prepare("UPDATE tasks SET status = 1 WHERE id = :id");
-    $stmt->execute(['id' => $taskId]);
+function completeTask($pdo, $taskId, $userId) {
+    $stmt = $pdo->prepare("UPDATE tasks SET status = 1 WHERE id = :id AND user_id = :user_id");
+    $stmt->execute([
+        'id' => $taskId,
+        'user_id' => $userId,
+    ]);
 }
 
 // Archive a task
-function archiveTask($pdo, $taskId) {
-    $stmt = $pdo->prepare("UPDATE tasks SET archived = 1 WHERE id = :id");
-    $stmt->execute(['id' => $taskId]);
+function archiveTask($pdo, $taskId, $userId) {
+    $stmt = $pdo->prepare("UPDATE tasks SET archived = 1 WHERE id = :id AND user_id = :user_id");
+    $stmt->execute([
+        'id' => $taskId,
+        'user_id' => $userId,
+    ]);
 }
 ?>
