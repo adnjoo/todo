@@ -23,11 +23,10 @@ $tasks = $isLoggedIn ? getTasks($pdo, $_SESSION['user_id']) : [];
 $title = 'To-Do List';
 include_once '../src/views/header.php';
 ?>
-<div class="max-w-4xl mx-auto mt-10 p-6 bg-gray-100 rounded shadow-lg">
+<div class="max-w-4xl mx-auto mt-10 p-6 bg-gray-100 rounded shadow-lg min-h-96">
     <?php if ($isLoggedIn): ?>
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-700">Welcome, <?= htmlspecialchars($_SESSION['username']); ?>!</h1>
-            <a href="logout.php" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</a>
         </div>
 
         <h2 class="text-xl font-semibold text-gray-800 mb-4">To-Do List</h2>
