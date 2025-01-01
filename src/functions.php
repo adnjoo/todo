@@ -1,6 +1,10 @@
 <?php
 include_once '../config/config.php';
 
+$config = [
+    'app_name' => 'Todo App',
+];
+
 // Fetch tasks
 function getTasks($pdo) {
     $stmt = $pdo->prepare("SELECT * FROM tasks ORDER BY created_at DESC");
