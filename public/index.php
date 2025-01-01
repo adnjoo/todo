@@ -1,25 +1,23 @@
 <?php
 include_once '../src/functions.php';
 
-// Check if the user is logged in
+// Start session and check if the user is logged in
 session_start();
 
-if (!isset($_SESSION['user_id'])) {
-    $isLoggedIn = false; // Flag for user login status
-} else {
-    $isLoggedIn = true; // Flag for user login status
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (isset($_POST['task'])) {
-            addTask($pdo, $_POST['task']);
-        } elseif (isset($_POST['complete'])) {
-            completeTask($pdo, $_POST['complete']);
-        } elseif (isset($_POST['archive'])) {
-            archiveTask($pdo, $_POST['archive']);
-        }
+$isLoggedIn = isset($_SESSION['user_id']); // Check if user ID exists in session
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $userId = $_SESSION['user_id'];
+    if (isset($_POST['task'])) {
+        addTask($pdo, $_POST['task'], $userId);
+    } elseif (isset($_POST['complete'])) {
+        completeTask($pdo, $_POST['complete'], $userId);
+    } elseif (isset($_POST['archive'])) {
+        archiveTask($pdo, $_POST['archive'], $userId);
     }
 }
 
-$tasks = $isLoggedIn ? getTasks($pdo) : [];
+$tasks = $isLoggedIn ? getTasks($pdo, $_SESSION['user_id']) : [];
 ?>
 
 
