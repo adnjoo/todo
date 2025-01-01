@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     status TINYINT(1) DEFAULT 0,
     archived TINYINT(1) DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    due_date DATETIME DEFAULT NULL,
     user_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
