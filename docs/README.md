@@ -1,3 +1,4 @@
+### apache setup
 ```bash
 open /opt/homebrew/etc/httpd/httpd.conf     
 ```
