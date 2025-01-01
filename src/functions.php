@@ -34,6 +34,15 @@ function completeTask($pdo, $taskId, $userId) {
     ]);
 }
 
+// Delete a task
+function deleteTask($pdo, $taskId, $userId) {
+    $stmt = $pdo->prepare("DELETE FROM tasks WHERE id = :id AND user_id = :user_id");
+    $stmt->execute([
+        'id' => $taskId,
+        'user_id' => $userId,
+    ]);
+}
+
 // Archive a task
 function archiveTask($pdo, $taskId, $userId) {
     $stmt = $pdo->prepare("UPDATE tasks SET archived = 1 WHERE id = :id AND user_id = :user_id");
