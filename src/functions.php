@@ -6,8 +6,12 @@ $config = [
 ];
 
 // Fetch tasks
-function getTasks($pdo) {
-    $stmt = $pdo->prepare("SELECT * FROM tasks ORDER BY created_at DESC");
+function getTasks($pdo, $includeArchived = false) {
+    $query = "SELECT * FROM tasks WHERE archived = 0 ORDER BY created_at DESC";
+    if ($includeArchived) {
+        $query = "SELECT * FROM tasks ORDER BY created_at DESC";
+    }
+    $stmt = $pdo->prepare($query);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -24,10 +28,9 @@ function completeTask($pdo, $taskId) {
     $stmt->execute(['id' => $taskId]);
 }
 
-// Delete a task
-function deleteTask($pdo, $taskId) {
-    $stmt = $pdo->prepare("DELETE FROM tasks WHERE id = :id");
+// Archive a task
+function archiveTask($pdo, $taskId) {
+    $stmt = $pdo->prepare("UPDATE tasks SET archived = 1 WHERE id = :id");
     $stmt->execute(['id' => $taskId]);
 }
 ?>
-
