@@ -65,16 +65,14 @@ function renderTaskList($tasks)
                     <div
                         id="dropdown-<?= $task['id'] ?>"
                         class="hidden absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-10">
-                        <?php if (!$task['status']): ?>
-                            <form method="POST" class="block w-full text-left">
-                                <button
-                                    name="complete"
-                                    value="<?= $task['id'] ?>"
-                                    class="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    ✔️ Mark as Complete
-                                </button>
-                            </form>
-                        <?php endif; ?>
+                        <form method="POST" class="block w-full text-left">
+                            <button
+                                name="complete"
+                                value="<?= $task['id'] ?>"
+                                class="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <?= $task['status'] ? '❌ Mark as Incomplete' : '✔️ Mark as Complete' ?>
+                            </button>
+                        </form>
                         <form method="POST" class="block w-full">
                             <button
                                 name="delete"

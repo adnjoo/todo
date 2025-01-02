@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['task'])) {
         addTask($pdo, $_POST['task'], $userId);
     } elseif (isset($_POST['complete'])) {
-        completeTask($pdo, $_POST['complete'], $userId);
+        toggleTaskStatus($pdo, $_POST['complete'], $userId); // Use toggleTaskStatus for dynamic toggling
     } elseif (isset($_POST['delete'])) {
         deleteTask($pdo, $_POST['delete'], $userId);
     } elseif (isset($_POST['edit'])) {

@@ -44,14 +44,33 @@ function editTask($pdo, $taskId, $newTask, $newDueDate, $userId)
 }
 
 // Mark task as complete
-function completeTask($pdo, $taskId, $userId)
+function toggleTaskStatus($pdo, $taskId, $userId)
 {
-    $stmt = $pdo->prepare("UPDATE tasks SET status = 1 WHERE id = :id AND user_id = :user_id");
+    // Fetch the current status of the task
+    $stmt = $pdo->prepare("SELECT status FROM tasks WHERE id = :id AND user_id = :user_id");
     $stmt->execute([
         'id' => $taskId,
         'user_id' => $userId,
     ]);
+    $currentStatus = $stmt->fetchColumn();
+
+    if ($currentStatus === false) {
+        // Task not found
+        throw new Exception("Task not found or does not belong to the user.");
+    }
+
+    // Toggle the status: if 1 (complete), set to 0 (incomplete), and vice versa
+    $newStatus = $currentStatus ? 0 : 1;
+
+    // Update the status in the database
+    $stmt = $pdo->prepare("UPDATE tasks SET status = :status WHERE id = :id AND user_id = :user_id");
+    $stmt->execute([
+        'status' => $newStatus,
+        'id' => $taskId,
+        'user_id' => $userId,
+    ]);
 }
+
 
 // Delete a task
 function deleteTask($pdo, $taskId, $userId)
