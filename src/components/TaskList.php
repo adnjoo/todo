@@ -33,7 +33,7 @@ function renderTaskList($tasks)
                             id="updated_due_date_<?= $task['id'] ?>"
                             type="date"
                             name="updated_due_date"
-                            value="<?= htmlspecialchars($task['due_date']) ?>"
+                            value="<?= htmlspecialchars((new DateTime($task['due_date']))->format('Y-m-d')) ?>"
                             class="border p-2 rounded w-full"
                             required>
                     </div>
