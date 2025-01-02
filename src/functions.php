@@ -25,6 +25,16 @@ function addTask($pdo, $task, $userId) {
     ]);
 }
 
+// Edit a task
+function editTask($pdo, $taskId, $newTask, $userId) {
+    $stmt = $pdo->prepare("UPDATE tasks SET task = :task WHERE id = :id AND user_id = :user_id");
+    $stmt->execute([
+        'task' => $newTask,
+        'id' => $taskId,
+        'user_id' => $userId,
+    ]);
+}
+
 // Mark task as complete
 function completeTask($pdo, $taskId, $userId) {
     $stmt = $pdo->prepare("UPDATE tasks SET status = 1 WHERE id = :id AND user_id = :user_id");
