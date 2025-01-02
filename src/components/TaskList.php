@@ -5,13 +5,38 @@ function renderTaskList($tasks)
     <ul class="space-y-4">
         <?php foreach ($tasks as $task): ?>
             <li class="flex justify-between items-center p-4 bg-white rounded shadow-sm border">
-                <span class="<?= $task['status'] ? 'line-through text-gray-400' : 'text-gray-700' ?>">
+                <span id="task-text-<?= $task['id'] ?>" class="<?= $task['status'] ? 'line-through text-gray-400' : 'text-gray-700' ?>">
                     <?= htmlspecialchars($task['task']) ?>
                 </span>
+
+                <!-- Edit Form -->
+                <form id="edit-form-<?= $task['id'] ?>" method="POST" class="hidden">
+                    <input
+                        type="text"
+                        name="updated_task"
+                        value="<?= htmlspecialchars($task['task']) ?>"
+                        class="border p-2 rounded w-full"
+                        required>
+                    <input type="hidden" name="task_id" value="<?= $task['id'] ?>">
+                    <button
+                        type="submit"
+                        name="edit"
+                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Save
+                    </button>
+                    <button
+                        type="button"
+                        onclick="toggleEditForm('<?= $task['id'] ?>')"
+                        class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                        Cancel
+                    </button>
+                </form>
+
                 <div class="relative">
                     <!-- Triple Dot Button -->
                     <button
                         onclick="toggleDropdown('dropdown-<?= $task['id'] ?>')"
+                        aria-label="Task options"
                         class="bg-gray-200 hover:bg-gray-300 rounded-full p-2">
                         ⋮
                     </button>
@@ -30,33 +55,51 @@ function renderTaskList($tasks)
                                 </button>
                             </form>
                         <?php endif; ?>
-                        <form method="POST" class="block w-full text-left">
+                        <form method="POST" class="block w-full">
                             <button
                                 name="delete"
                                 value="<?= $task['id'] ?>"
-                                class="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                class="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left">
                                 🗑️ Delete
                             </button>
                         </form>
-                        <form method="POST" class="block w-full text-left">
+                        <form method="POST" class="block w-full">
                             <button
                                 name="archive"
                                 value="<?= $task['id'] ?>"
-                                class="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                class="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left">
                                 📂 Archive
                             </button>
                         </form>
+                        <button
+                            onclick="toggleEditForm('<?= $task['id'] ?>')"
+                            class="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left">
+                            ✏️ Edit
+                        </button>
                     </div>
                 </div>
             </li>
         <?php endforeach; ?>
     </ul>
 
-    <!-- Dropdown Toggle Script -->
+    <!-- Scripts -->
     <script>
         function toggleDropdown(dropdownId) {
             const dropdown = document.getElementById(dropdownId);
             dropdown.classList.toggle('hidden');
+        }
+
+        function toggleEditForm(taskId) {
+            const textElement = document.getElementById(`task-text-${taskId}`);
+            const formElement = document.getElementById(`edit-form-${taskId}`);
+
+            if (textElement.classList.contains('hidden')) {
+                textElement.classList.remove('hidden');
+                formElement.classList.add('hidden');
+            } else {
+                textElement.classList.add('hidden');
+                formElement.classList.remove('hidden');
+            }
         }
 
         // Close dropdowns if clicking outside
@@ -71,3 +114,4 @@ function renderTaskList($tasks)
     </script>
     <?php
 }
+?>
