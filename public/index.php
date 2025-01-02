@@ -16,11 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (isset($_POST['delete'])) {
         deleteTask($pdo, $_POST['delete'], $userId);
     } elseif (isset($_POST['edit'])) {
-        editTask($pdo, $_POST['task_id'], $_POST['updated_task'], $userId);
+        $taskId = $_POST['task_id'];
+        $newTask = $_POST['updated_task'];
+        $newDueDate = $_POST['updated_due_date'];
+
+        // Call editTask with the new due date
+        editTask($pdo, $taskId, $newTask, $newDueDate, $userId);
     } elseif (isset($_POST['archive'])) {
         archiveTask($pdo, $_POST['archive'], $userId);
     }
-}
+};
 
 $tasks = $isLoggedIn ? getTasks($pdo, $_SESSION['user_id']) : [];
 

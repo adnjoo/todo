@@ -6,7 +6,8 @@ $config = [
 ];
 
 // Fetch tasks
-function getTasks($pdo, $userId, $includeArchived = false) {
+function getTasks($pdo, $userId, $includeArchived = false)
+{
     $query = "SELECT * FROM tasks WHERE user_id = :user_id AND archived = 0 ORDER BY created_at DESC";
     if ($includeArchived) {
         $query = "SELECT * FROM tasks WHERE user_id = :user_id ORDER BY created_at DESC";
@@ -17,7 +18,8 @@ function getTasks($pdo, $userId, $includeArchived = false) {
 }
 
 // Add a task
-function addTask($pdo, $task, $userId) {
+function addTask($pdo, $task, $userId)
+{
     $stmt = $pdo->prepare("INSERT INTO tasks (task, user_id) VALUES (:task, :user_id)");
     $stmt->execute([
         'task' => $task,
@@ -26,17 +28,24 @@ function addTask($pdo, $task, $userId) {
 }
 
 // Edit a task
-function editTask($pdo, $taskId, $newTask, $userId) {
-    $stmt = $pdo->prepare("UPDATE tasks SET task = :task WHERE id = :id AND user_id = :user_id");
+function editTask($pdo, $taskId, $newTask, $newDueDate, $userId)
+{
+    $stmt = $pdo->prepare("
+        UPDATE tasks 
+        SET task = :task, due_date = :due_date 
+        WHERE id = :id AND user_id = :user_id
+    ");
     $stmt->execute([
         'task' => $newTask,
+        'due_date' => $newDueDate,
         'id' => $taskId,
         'user_id' => $userId,
     ]);
 }
 
 // Mark task as complete
-function completeTask($pdo, $taskId, $userId) {
+function completeTask($pdo, $taskId, $userId)
+{
     $stmt = $pdo->prepare("UPDATE tasks SET status = 1 WHERE id = :id AND user_id = :user_id");
     $stmt->execute([
         'id' => $taskId,
@@ -45,7 +54,8 @@ function completeTask($pdo, $taskId, $userId) {
 }
 
 // Delete a task
-function deleteTask($pdo, $taskId, $userId) {
+function deleteTask($pdo, $taskId, $userId)
+{
     $stmt = $pdo->prepare("DELETE FROM tasks WHERE id = :id AND user_id = :user_id");
     $stmt->execute([
         'id' => $taskId,
@@ -54,11 +64,20 @@ function deleteTask($pdo, $taskId, $userId) {
 }
 
 // Archive a task
-function archiveTask($pdo, $taskId, $userId) {
+function archiveTask($pdo, $taskId, $userId)
+{
     $stmt = $pdo->prepare("UPDATE tasks SET archived = 1 WHERE id = :id AND user_id = :user_id");
     $stmt->execute([
         'id' => $taskId,
         'user_id' => $userId,
     ]);
 }
-?>
+
+function formatDueDate($dueDate)
+{
+    // Create a DateTime object from the string
+    $dateTime = new DateTime($dueDate);
+
+    // Format the date in a more readable format
+    return $dateTime->format('F j, Y'); // e.g., January 3, 2025
+}
